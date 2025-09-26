@@ -8,7 +8,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Устанавливаем MinGW через Chocolatey (без багов)
       - name: Install MinGW via Chocolatey
         run: |
           choco install mingw --version=13.2.0 -y
@@ -19,7 +18,7 @@ jobs:
 
       - name: Download SFML
         run: |
-          curl -L https://www.sfml-dev.org/files/SFML-2.6.1-windows-gcc-13.2.0-mingw-64-bit.zip -o sfml.zip
+          curl -L https://github.com/SFML/SFML/releases/download/2.6.1/SFML-2.6.1-windows-gcc-13.2.0-mingw-64-bit.zip -o sfml.zip
           7z x sfml.zip
           echo "SFML_PATH=$(pwd)/SFML-2.6.1" >> $GITHUB_ENV
 
