@@ -1,0 +1,37 @@
+name: Build Snake
+
+on: [push, workflow_dispatch]
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup MinGW
+        uses: egor-tensin/setup-mingw@v2
+        with:
+          version: 13.2.0
+
+      - name: Download SFML
+        run: |
+          curl -L https://www.sfml-dev.org/files/SFML-2.6.1-windows-gcc-13.2.0-mingw-64-bit.zip -o sfml.zip
+          7z x sfml.zip
+          echo "SFML_PATH=$(pwd)/SFML-2.6.1" >> $GITHUB_ENV
+
+      - name: Compile
+        run: |
+          g++ -O2 main.cpp -I${{ env.SFML_PATH }}/include -L${{ env.SFML_PATH }}/lib -lsfml-graphics -lsfml-window -lsfml-system -o snake.exe
+
+      - name: Prepare folder
+        run: |
+          mkdir release
+          copy snake.exe release\
+          copy body.png release\  # если есть
+          copy "${{ env.SFML_PATH }}\bin\*.dll" release\
+
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: snake-windows
+          path: release/
