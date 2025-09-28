@@ -16,7 +16,8 @@ jobs:
 
     - name: configure
       run: ./configure
-
+    - name: Make configure executable
+      run: chmod +x ./configure
     - name: Install dependencies
       run: make
 
